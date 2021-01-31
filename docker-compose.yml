@@ -1,0 +1,21 @@
+version: "3"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/golang/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - .:/go/src/api/
+    command: >
+      sh -c "reflex -s -r '\.go$$' go run main.go"
+  ui:
+    build:
+      context: .
+      dockerfile: ./docker/vue3/Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./ui:/app
+    command: npm run serve
