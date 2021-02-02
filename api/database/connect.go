@@ -2,6 +2,7 @@
 package database
 
 import (
+	"auth-api/models"
 	"fmt"
 	"os"
 
@@ -19,9 +20,10 @@ var (
 )
 
 func Connect() {
-	db, err := gorm.Open(mysql.Open(datasourceName), &gorm.Config{})
+	connection, err := gorm.Open(mysql.Open(datasourceName), &gorm.Config{})
 	if err != nil {
 		panic("Could not connect to the database")
 	}
-	fmt.Println(db)
+
+	connection.AutoMigrate(&models.User{})
 }
