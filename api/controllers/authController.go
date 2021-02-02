@@ -8,11 +8,27 @@ import (
 )
 
 func Register(c *fiber.Ctx) error {
-	var user models.User
+	var data map[string]string
 
-	user.FirstName = "Self"
-	user.LastName = "Note"
-	user.Email = "selfnote@yahoo.co.jp"
-	user.Password = "pass"
+	// リクエストデータをパースする
+	if err := c.BodyParser(&data); err != nil {
+		return err
+	}
+
+	// パスワードチェック
+	if data["password"] != data["password_confirm"] {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"message": "Passwords do not match!",
+		})
+	}
+
+	user := models.User{
+		FirstName: data["first_name"],
+		LastName:  data["last_name"],
+		Email:     data["email"],
+		Password:  data["password"],
+	}
+
 	return c.JSON(user)
 }
