@@ -17,7 +17,17 @@ type Claims struct {
 }
 
 func Logout(c *fiber.Ctx) error {
-	
+	cookie := fiber.Cookie{
+		Name:     "jwt",
+		Value:    "",                         // tokenを空にする
+		Expires:  time.Now().Add(-time.Hour), // マイナス値を入れて期限切れ
+		HTTPOnly: true,
+	}
+
+	c.Cookie(&cookie)
+	return c.JSON(fiber.Map{
+		"message": "success",
+	})
 }
 
 func User(c *fiber.Ctx) error {
@@ -115,9 +125,10 @@ func Login(c *fiber.Ctx) error {
 
 	// Cookie
 	cookie := fiber.Cookie{
-		Name:    "jwt",
-		Value:   token,
-		Expires: time.Now().Add(time.Hour * 24),
+		Name:     "jwt",
+		Value:    token,
+		Expires:  time.Now().Add(time.Hour * 24),
+		HTTPOnly: true,
 	}
 
 	c.Cookie(&cookie)
