@@ -2,6 +2,7 @@
 package controllers
 
 import (
+	"auth-api/database"
 	"auth-api/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -33,6 +34,10 @@ func Register(c *fiber.Ctx) error {
 		Email:     data["email"],
 		Password:  password,
 	}
+
+	// データ登録
+	// CreateはGORMのメソッド
+	database.DB.Create(&user)
 
 	return c.JSON(user)
 }
