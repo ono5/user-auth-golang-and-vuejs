@@ -12,6 +12,38 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type Claims struct {
+	jwt.StandardClaims
+}
+
+func Logout(c *fiber.Ctx) error {
+	
+}
+
+func User(c *fiber.Ctx) error {
+	// CookieからJWTを取得
+	cookie := c.Cookies("jwt") // Loginで保存したもの
+	// token取得
+	token, err := jwt.ParseWithClaims(cookie, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil || !token.Valid {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": "unauthenticated",
+		})
+	}
+
+	claims := token.Claims.(*Claims)
+	// User IDを取得
+	id := claims.Issuer
+
+	var user models.User
+	database.DB.Where("id = ?", id).First(&user)
+
+	return c.JSON(user)
+}
+
 func Register(c *fiber.Ctx) error {
 	var data map[string]string
 
@@ -72,7 +104,7 @@ func Login(c *fiber.Ctx) error {
 
 	// JWT
 	claims := jwt.StandardClaims{
-		Id:        strconv.Itoa(int(user.ID)),            // stringに型変換
+		Issuer:    strconv.Itoa(int(user.ID)),            // stringに型変換
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), // 有効期限
 	}
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -94,4 +126,3 @@ func Login(c *fiber.Ctx) error {
 		"jwt": token,
 	})
 }
-
