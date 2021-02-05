@@ -16,6 +16,8 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
       MYSQL_DATABASE: go_auth
+    links:
+      - "smtp"
   ui:
     build:
       context: .
@@ -51,3 +53,9 @@ services:
         - mysql
     ports:
         - 8888:80
+
+  smtp:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
