@@ -1,0 +1,62 @@
+module.exports = {
+    env: {
+      browser: true,
+      es6: true
+    },
+    extends: [
+      'airbnb',
+      'airbnb/hooks',
+      'plugin:@typescript-eslint/recommended',
+      'prettier/react',
+      'prettier/@typescript-eslint',
+      'plugin:prettier/recommended'
+    ],
+    parser: '@typescript-eslint/parser',
+    parserOptions: {
+      sourceType: 'module',
+      ecmaFeatures: {
+        jsx: true
+      }
+    },
+    globals: {
+      Atomics: 'readonly',
+      SharedArrayBuffer: 'readonly'
+    },
+    plugins: ['prettier', '@typescript-eslint'],
+    rules: {
+      'prettier/prettier': [2, { singleQuote: true, parser: 'typescript' }],
+      'no-unused-expressions': [2, { allowShortCircuit: true }],
+      'react/jsx-filename-extension': [2, { extensions: ['.tsx'] }],
+      "import/extensions": [2, { extensions: [".ts", ".tsx"] }],
+      '@typescript-eslint/no-unused-vars': 2,
+      '@typescript-eslint/explicit-function-return-type': 2,
+      '@typescript-eslint/no-explicit-any': 2,
+      '@typescript-eslint/typedef': 2,
+      '@typescript-eslint/no-non-null-assertion': 2,
+      '@typescript-eslint/no-inferrable-types': 0, // typedefと相性が悪いので切る
+      '@typescript-eslint/interface-name-prefix': 0, // 現状のコーディングスタイルとは合わない
+      // TODO: 直し方がわからない部分があるので、一旦切っている
+      'jsx-a11y/label-has-associated-control': 0,
+      'jsx-a11y/click-events-have-key-events': 0,
+      'jsx-a11y/no-static-element-interactions': 0,
+      'jsx-a11y/anchor-is-valid': 0
+    },
+    overrides: [
+      {
+        files: [
+          '**/entrypoints/**/*.{ts,tsx}',
+        ],
+        rules: {
+          '@typescript-eslint/no-non-null-assertion': 0
+        }
+      }
+    ],
+    settings: {
+      react: {
+        version: 'detect'
+      },
+      "import/resolver": {
+        node: { extensions: ['.js', '.jsx', '.ts', '.tsx'] }
+      }
+    }
+  };
