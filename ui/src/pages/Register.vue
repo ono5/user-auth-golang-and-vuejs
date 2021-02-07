@@ -84,8 +84,6 @@ export default {
 </script>
 
 <style>
-
-
 .form-register {
   width: 100%;
   max-width: 330px;
